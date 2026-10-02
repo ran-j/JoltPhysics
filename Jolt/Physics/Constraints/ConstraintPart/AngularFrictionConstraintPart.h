@@ -86,7 +86,7 @@ public:
 		else
 			JPH_ASSERT(false); // Static vs static is nonsensical!
 
-		if (inv_effective_mass < FLT_MIN)
+		if (inv_effective_mass == 0.0f)
 			this->Deactivate();
 		else
 			this->mEffectiveMass = 1.0f / inv_effective_mass;

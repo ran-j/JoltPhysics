@@ -8,7 +8,6 @@
 * [Death Stranding 2: On the Beach](https://www.playstation.com/en-us/games/death-stranding-2-on-the-beach/) - A third person action adventure game set in a post-apocalyptic world ravaged by otherworldly creatures.
 * [ezEngine](https://github.com/ezEngine/ezEngine) - An open source C++ game engine.
 * [GDevelop](https://gdevelop.io/) - An open-source, no-code game engine. See [this](https://blog.blips.fm/articles/gdevelop-55-released-with-enhanced-3d-support) announcement.
-* [Geekbench 7](https://www.geekbench.com/) - A cross-platform benchmark that measures system performance. See [this](https://www.geekbench.com/blog/2026/07/geekbench-7/) announcement.
 * [Godot](https://github.com/godotengine/godot) - Godot Engine – Multi-platform 2D and 3D game engine. See [this](https://godotengine.org/releases/4.4/#jolt-physics-module) announcement.
 * [Horizon Forbidden West](https://www.playstation.com/en-us/games/horizon-forbidden-west/) - An open world action RPG adventure.
 * [HypeHype](https://www.hypehype.com/) - A mobile app to create, remix and play games. See [this](https://twitter.com/SebAaltonen/status/1726871354228482237) X post.
@@ -16,11 +15,9 @@
 * [Light Tracer Render](https://lighttracer.org/) - A rendering tool, uses Jolt for object placement. See [this](https://lighttracer.org/blog/light-tracer-render-2-4-0/) announcement.
 * [LÖVR](https://lovr.org) - A Lua VR framework.  See [this](https://lovr.org/docs/v0.18.0) release announcement.
 * [luxe engine](https://luxeengine.com) - A cross platform, rapid development game engine.
-* [Lumina Engine](https://luminagameengine.com) - A modern, high-performance game engine built with modern Vulkan.
 * [The Mirror](https://themirror.space/) - A game development platform designed to empower developers and artists with real-time, limitless creativity. See [this](https://twitter.com/themirrorgdp/status/1718019599361323023?s=20) X post.
 * [Nazara Engine](https://github.com/NazaraEngine/NazaraEngine) - A cross-platform framework aimed at real-time applications (such as video games) requiring Audio, 2D/3D rendering and physics, network and more.
 * [NeoAxis Engine](https://www.neoaxis.com/) - A 3D game engine. See [this](https://www.neoaxis.com/news/neoaxis_engine_2023_1_released) announcement.
-* [OTR 2](https://www.dogbytegames.com/off_the_road_2.html) - A sandbox driving game. It features a huge game world to explore, land, air, sea vehicles to drive, online multiplayer.
 * [Qt Quick 3D Jolt Physics](https://github.com/glazunov999/qtquick3djoltphysics) - An alternative high-level API for physics simulation in Qt Quick 3D.
 * [Sceneri](https://www.sceneri.com/) - A mobile app for creating and sharing 3D games and experiences. See [this](https://www.sceneri.com/blog/2023-07-27-jolt-physics-bringing-sceneris-worlds-to-life) blog post.
 * [Substrata](https://substrata.info/) - A metaverse platform.

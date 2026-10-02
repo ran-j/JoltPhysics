@@ -7,12 +7,7 @@
 // Jolt library version
 #define JPH_VERSION_MAJOR 5
 #define JPH_VERSION_MINOR 6
-#define JPH_VERSION_PATCH 1
-
-// Always turn on asserts in Debug mode
-#if defined(JPH_DEBUG) && !defined(JPH_ENABLE_ASSERTS)
-	#define JPH_ENABLE_ASSERTS
-#endif
+#define JPH_VERSION_PATCH 0
 
 // Determine which features the library was compiled with
 #ifdef JPH_DOUBLE_PRECISION
@@ -563,6 +558,11 @@ static_assert(sizeof(uint16) == 2, "Invalid size of uint16");
 static_assert(sizeof(uint32) == 4, "Invalid size of uint32");
 static_assert(sizeof(uint64) == 8, "Invalid size of uint64");
 
+// Determine if we want extra debugging code to be active
+#if !defined(NDEBUG) && !defined(JPH_NO_DEBUG)
+	#define JPH_DEBUG
+#endif
+
 // Define inline macro
 #if defined(JPH_NO_FORCE_INLINE)
 	#define JPH_INLINE inline
@@ -585,14 +585,7 @@ static_assert(sizeof(uint64) == 8, "Invalid size of uint64");
 // Default memory allocation alignment.
 // This define can be overridden in case the user provides an Allocate function that has a different alignment than the platform default.
 #ifndef JPH_DEFAULT_ALLOCATE_ALIGNMENT
-	#if defined(JPH_COMPILER_MINGW) && JPH_CPU_ARCH_BITS == 32
-		// 32-bit MinGW g++ lies that __STDCPP_DEFAULT_NEW_ALIGNMENT__ is 16, but it is actually 8.
-		// See: https://github.com/godotengine/godot/issues/121608#issuecomment-5142806330
-		// Note: See similar fix for the definition of JPH_INTERNAL_DEFAULT_ALLOCATE.
-		#define JPH_DEFAULT_ALLOCATE_ALIGNMENT 8
-	#else
-		#define JPH_DEFAULT_ALLOCATE_ALIGNMENT __STDCPP_DEFAULT_NEW_ALIGNMENT__
-	#endif
+	#define JPH_DEFAULT_ALLOCATE_ALIGNMENT __STDCPP_DEFAULT_NEW_ALIGNMENT__
 #endif
 
 // Cache line size (used for aligning to cache line)

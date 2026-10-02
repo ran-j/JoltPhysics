@@ -42,6 +42,7 @@ There are a number of user configurable C++ defines that turn on/off certain fea
 		<li>JPH_TRACK_BROADPHASE_STATS - Enables PhysicsSystem::ReportBroadphaseStats, which outputs stats to the TTY about the broad phase.</li>
 		<li>JPH_TRACK_NARROWPHASE_STATS - Enables NarrowPhaseStat::sReportStats(), which outputs stats to the TTY about the narrow phase.</li>
 		<li>JPH_TRACK_SIMULATION_STATS - Keeps track of how much time each body costs to simulate. Can be output to the TTY using PhysicsSystem::ReportSimulationStats but can also be accessed through MotionProperties::GetSimulationStats.</li>
+		<li>JPH_USE_STD_VECTOR - Use std::vector instead of Jolt's own Array class.</li>
 	</ul>
 </details>
 
@@ -54,7 +55,7 @@ There are a number of user configurable C++ defines that turn on/off certain fea
 		<li>JPH_USE_F16C - Enable half float CPU instructions (default: on, x86/x64 only)</li>
 		<li>JPH_USE_FMADD - Enable fused multiply add CPU instructions (default: on, x86/x64 only)</li>
 		<li>JPH_USE_LZCNT - Enable the lzcnt CPU instruction (default: on, x86/x64 only)</li>
-		<li>JPH_USE_NEON - Enable NEON on ARM (default: on for 64-bit ARM)</li>
+		<li>JPH_USE_NEON - Enable NEON on ARM (default: on for 64-bit ARM)</li> 
 		<li>JPH_USE_RVV - Enable RVV on RISC-V (default: off)</li>
 		<li>JPH_USE_SSE - Use SSE2 instructions (enabled on x86/x64)</li>
 		<li>JPH_USE_SSE4_1 - Enable SSE4.1 CPU instructions (default: on, x86/x64 only)</li>
@@ -84,15 +85,15 @@ To implement your custom memory allocator override Allocate, Free, Reallocate, A
 ## Building
 
 <details>
-	<summary>Windows</summary>
+	<summary>Windows 10+</summary>
 	<ul style="list-style: none"><li>
 		<details>
 			<summary>MSVC CL (default compiler)</summary>
 			<ul>
 				<li>Download Visual Studio 2026 (Community or other edition)</li>
 				<li>Download CMake 3.20+ (https://cmake.org/download/)</li>
-				<li>Run <code>cmake_vs2026_cl.bat</code></li>
-				<li>Open the resulting project file <code>VS2026_CL\JoltPhysics.sln</code></li>
+				<li>Run cmake_vs2026_cl.bat</li>
+				<li>Open the resulting project file VS2026_CL\JoltPhysics.sln</li>
 				<li>Compile and run either 'Samples' or 'UnitTests'</li>
 			</ul>
 		</details>
@@ -101,8 +102,8 @@ To implement your custom memory allocator override Allocate, Free, Reallocate, A
 			<ul>
 				<li>Download Visual Studio 2026 (Community or other edition)</li>
 				<li>Download CMake 3.20+ (https://cmake.org/download/)</li>
-				<li>Run <code>cmake_vs2026_cl_32bit.bat</code></li>
-				<li>Open the resulting project file <code>VS2026_CL_32BIT\JoltPhysics.sln</code></li>
+				<li>Run cmake_vs2026_cl_32bit.bat</li>
+				<li>Open the resulting project file VS2026_CL_32BIT\JoltPhysics.sln</li>
 				<li>Compile and run either 'Samples' or 'UnitTests'</li>
 			</ul>
 		</details>
@@ -110,10 +111,10 @@ To implement your custom memory allocator override Allocate, Free, Reallocate, A
 			<summary>MSVC Clang compiler</summary>
 			<ul>
 				<li>Download Visual Studio 2026 (Community or other edition)</li>
-				<li>Make sure to install "C++ Clang Compiler for Windows" and "MSBuild support for LLVM (clang-cl)" using the Visual Studio Installer</li>
+				<li>Make sure to install "C++ Clang Compiler for Windows 11.0.0+" and "C++ Clang-cl for v142+ build tools (x64/x86)" using the Visual Studio Installer</li>
 				<li>Download CMake 3.20+ (https://cmake.org/download/)</li>
-				<li>Run <code>cmake_vs2026_clang.bat</code></li>
-				<li>Open the resulting project file <code>VS2026_Clang\JoltPhysics.sln</code></li>
+				<li>Run cmake_vs2026_clang.bat</li>
+				<li>Open the resulting project file VS2026_Clang\JoltPhysics.sln</li>
 				<li>Compile and run either 'Samples' or 'UnitTests'</li>
 			</ul>
 		</details>
@@ -121,10 +122,10 @@ To implement your custom memory allocator override Allocate, Free, Reallocate, A
 			<summary>MinGW</summary>
 			<ul>
 				<li>Follow download instructions for MSYS2 (https://www.msys2.org/)</li>
-				<li>From the MSYS2 MSYS app run: <code>pacman -Suy</code> and <code>pacman -S --needed mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake</code></li>
-				<li>From the MSYS2 MINGW64 app, in the <code>Build</code> folder run: <code>./cmake_windows_mingw.sh</code></li>
-				<li>Run: <code>cmake --build MinGW_Debug</code></li>
-				<li>Run: <code>./MinGW_Debug/Samples.exe</code> or <code>./MinGW_Debug/UnitTests.exe</code></li>
+				<li>From the MSYS2 MSYS app run: pacman -S --needed mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake</li>
+				<li>From the MSYS2 MINGW x64 app, in the Build folder run: ./cmake_windows_mingw.sh</li>
+				<li>Run: cmake --build MinGW_Debug</li>
+				<li>Run: MinGW_Debug/UnitTests.exe</li>
 			</ul>
 		</details>
 	</li></ul>
@@ -136,26 +137,26 @@ To implement your custom memory allocator override Allocate, Free, Reallocate, A
 		<details>
 			<summary>Using make</summary>
 			<ul>
-				<li>Install clang (<code>apt-get install clang</code>)</li>
-				<li>Install cmake (<code>apt-get install cmake</code>)</li>
-				<li>If you want to build the Samples, JoltViewer or use the ComputeSystem, install the <a href="https://vulkan.lunarg.com/sdk/home#linux">Vulkan SDK</a>. Note that the Vulkan development packages usually do not include dxc so install the full SDK. Jolt uses dxc to cross compile hlsl shaders to Vulkan. See the helper script <code>ubuntu24_install_vulkan_sdk.sh</code> in this folder.</li>
-				<li>Run: <code>./cmake_linux_clang_gcc.sh</code></li>
-				<li>Go to the <code>Linux_Debug</code> folder</li>
-				<li>Run: <code>make -j$(nproc) && ./UnitTests</code></li>
-				<li>If you built the samples you can run: <code>./Samples</code></li>
+				<li>Install clang (apt-get install clang)</li>
+				<li>Install cmake (apt-get install cmake)</li>
+				<li>If you want to build the Samples, JoltViewer or use the ComputeSystem, install the <a href="https://vulkan.lunarg.com/doc/view/latest/linux/getting_started_ubuntu.html">Vulkan SDK</a></li>
+				<li>Run: ./cmake_linux_clang_gcc.sh</li>
+				<li>Go to the Linux_Debug folder</li>
+				<li>Run: make -j$(nproc) && ./UnitTests</li>
+				<li>If you built the samples you can run: ./Samples</li>
 			</ul>
 		</details>
 		<details>
 			<summary>Using ninja</summary>
 			<ul>
-				<li>Install clang (<code>apt-get install clang</code>)</li>
-				<li>Install cmake (<code>apt-get install cmake</code>)</li>
-				<li>Install ninja (<code>apt-get install ninja-build</code>)</li>
-				<li>If you want to build the Samples, JoltViewer or use the ComputeSystem, install the <a href="https://vulkan.lunarg.com/sdk/home#linux">Vulkan SDK</a>. Note that the Vulkan development packages usually do not include dxc so install the full SDK. Jolt uses dxc to cross compile hlsl shaders to Vulkan. See the helper script <code>ubuntu24_install_vulkan_sdk.sh</code> in this folder.</li>
-				<li>Run: <code>./cmake_ninja.sh</code></li>
-				<li>Go to the <code>Ninja_MultiConfig</code> folder</li>
-				<li>Run: <code>cmake --build . --config Debug && ./UnitTests</code></li>
-				<li>If you built the samples you can run: <code>./Debug/Samples</code></li>
+				<li>Install clang (apt-get install clang)</li>
+				<li>Install cmake (apt-get install cmake)</li>
+				<li>Install ninja (apt-get install ninja-build)</li>
+				<li>If you want to build the Samples, JoltViewer or use the ComputeSystem, install the <a href="https://vulkan.lunarg.com/doc/view/latest/linux/getting_started_ubuntu.html">Vulkan SDK</a></li>
+				<li>Run: ./cmake_ninja.sh</li>
+				<li>Go to the Ninja_MultiConfig folder</li>
+				<li>Run: cmake --build . --config Debug && ./UnitTests</li>
+				<li>If you built the samples you can run: ./Debug/Samples</li>
 			</ul>
 		</details>
 	</li></ul>
@@ -175,9 +176,9 @@ To implement your custom memory allocator override Allocate, Free, Reallocate, A
 	<summary>macOS</summary>
 	<ul>
 		<li>Install XCode</li>
-		<li>If you want to build the Samples, JoltViewer or use the ComputeSystem, install the <a href="https://vulkan.lunarg.com/sdk/home#mac">Vulkan SDK</a> or the dxc and spirv-cross tools (required to cross compile hlsl shaders to Metal)</li>
+		<li>Install the Vulkan SDK or the dxc and spirv-cross tools (required to cross compile hlsl shaders to Metal)</li>
 		<li>Download CMake 3.23+ (https://cmake.org/download/)</li>
-		<li>Run: <code>./cmake_xcode_macos.sh</code></li>
+		<li>Run: ./cmake_xcode_macos.sh</li>
 		<li>This will open XCode with a newly generated project</li>
 		<li>Build and run the project</li>
 		<li>Note that you can also follow the steps in the 'Linux' section if you wish to build without XCode.</li>
@@ -188,9 +189,9 @@ To implement your custom memory allocator override Allocate, Free, Reallocate, A
 	<summary>iOS</summary>
 	<ul>
 		<li>Install XCode</li>
-		<li>If you want to build the Samples, JoltViewer or use the ComputeSystem, install the <a href="https://vulkan.lunarg.com/sdk/home#mac">Vulkan SDK</a> or the dxc and spirv-cross tools (required to cross compile hlsl shaders to Metal)</li>
+		<li>Install the Vulkan SDK or the dxc and spirv-cross tools (required to cross compile hlsl shaders to Metal)</li>
 		<li>Download CMake 3.23+ (https://cmake.org/download/)</li>
-		<li>Run: <code>./cmake_xcode.ios.sh</code></li>
+		<li>Run: ./cmake_xcode.ios.sh</li>
 		<li>This will open XCode with a newly generated project</li>
 		<li>Build and run the project (note that this will only work in the simulator as the code signing information is not set up)</li>
 	</ul>
@@ -200,20 +201,19 @@ To implement your custom memory allocator override Allocate, Free, Reallocate, A
 	<summary>Emscripten (tested only on Linux)</summary>
 	<ul>
 		<li>Install Emscripten (https://emscripten.org/docs/getting_started/downloads.html)</li>
-		<li>Install nodejs (<code>apt-get install nodejs</code>)</li>
+		<li>Install nodejs (apt-get install nodejs)</li>
 		<li>Download CMake 3.23+ (https://cmake.org/download/)</li>
-		<li>Run: <code>./cmake_linux_emscripten.sh</code></li>
-		<li>Go to the <code>WASM_Debug</code> folder</li>
-		<li>Run: <code>make -j$(nproc) && node UnitTests.js</code></li>
+		<li>Run: ./cmake_linux_emscripten.sh</li>
+		<li>Go to the WASM_Debug folder</li>
+		<li>Run: make -j$(nproc) && node UnitTests.js</li>
 	</ul>
 </details>
 
-## Other Build Tools / Packages
+## Other Build Tools
 
 * A vcpkg package is available [here](https://github.com/microsoft/vcpkg/tree/master/ports/joltphysics).
 * A xmake package is available [here](https://github.com/xmake-io/xmake-repo/tree/dev/packages/j/joltphysics).
-* A conan package is available [here](https://conan.io/center/recipes/joltphysics).
-* A RHEL RPM package is available [here](https://github.com/alkontek/pkgspecs/tree/master/rpm/JoltPhysics).
+* A conan package is available [here](https://conan.io/center/recipes/joltphysics)
 
 ## Errors
 
@@ -226,20 +226,6 @@ If you receive the following error when linking:
 ```
 
 Then you have not enabled interprocedural optimizations (link time optimizations) for your own application. See the INTERPROCEDURAL_OPTIMIZATION option in CMakeLists.txt.
-
-### Unknown Header Error on Apple Platforms
-
-Apple's application bitcode workflow is deprecated, but the `-flto=thin` flag (which is what the `INTERPROCEDURAL_OPTIMIZATION` cmake flag enables in non-debug builds) still produces object files with LLVM bitcode.
-If you package Jolt's static library into an XCFramework, the embedded bitcode can cause errors such as:
-
-```
-Unknown header: 0xb17c0de
-```
-
-If you receive this error, disable interprocedural optimizations by turning the `INTERPROCEDURAL_OPTIMIZATION` cmake option `OFF`.
-This removes LLVM bitcode and produces regular object files instead. Disabling this option disables link-time and cross-translation-unit optimizations so may reduce performance.
-
-When directly linking Jolt's static library into your application, this error should not occur and you can leave the `INTERPROCEDURAL_OPTIMIZATION` option `ON`.
 
 ### Link Error: Unresolved External Symbol
 

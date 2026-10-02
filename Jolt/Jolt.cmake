@@ -16,6 +16,8 @@ set(JOLT_PHYSICS_SRC_FILES
 	${JOLT_PHYSICS_ROOT}/ConfigurationString.h
 	${JOLT_PHYSICS_ROOT}/Compute/ComputeBuffer.h
 	${JOLT_PHYSICS_ROOT}/Compute/ComputeQueue.h
+	${JOLT_PHYSICS_ROOT}/Compute/ComputeInterop.cpp
+    ${JOLT_PHYSICS_ROOT}/Compute/ComputeInterop.h
 	${JOLT_PHYSICS_ROOT}/Compute/ComputeSystem.cpp
 	${JOLT_PHYSICS_ROOT}/Compute/ComputeSystem.h
 	${JOLT_PHYSICS_ROOT}/Compute/ComputeShader.h
@@ -479,7 +481,7 @@ if (ENABLE_OBJECT_STREAM)
 	)
 endif()
 
-if (JPH_USE_DX12 OR JPH_USE_VK OR JPH_USE_MTL OR JPH_USE_CPU_COMPUTE)
+if (JPH_USE_DX11 OR JPH_USE_DX12 OR JPH_USE_VK OR JPH_USE_MTL OR JPH_USE_CPU_COMPUTE)
 	# Compute shaders
 	set(JOLT_PHYSICS_SHADERS
 		${JOLT_PHYSICS_ROOT}/Shaders/HairApplyDeltaTransform.hlsl
@@ -557,6 +559,18 @@ if (JPH_USE_CPU_COMPUTE)
 		${JOLT_PHYSICS_ROOT}/Shaders/HairWrapper.h
 		${JOLT_PHYSICS_ROOT}/Shaders/TestComputeWrapper.cpp
 	)
+endif()
+
+if (JPH_USE_DX11)
+    if (NOT WIN32)
+        message(FATAL_ERROR "JPH_USE_DX11 requires Windows")
+    endif()
+    list(APPEND JOLT_PHYSICS_SRC_FILES
+        ${JOLT_PHYSICS_ROOT}/Compute/DX11/ComputeInteropDX11.cpp
+        ${JOLT_PHYSICS_ROOT}/Compute/DX11/ComputeSystemDX11.cpp
+        ${JOLT_PHYSICS_ROOT}/Compute/DX11/ComputeSystemDX11.h
+        ${JOLT_PHYSICS_ROOT}/Compute/DX11/ComputeQueueDX11.h
+        ${JOLT_PHYSICS_ROOT}/Compute/DX11/IncludeDX11.h)
 endif()
 
 if (WIN32)
@@ -830,8 +844,8 @@ else()
 	target_precompile_headers(Jolt PRIVATE "$<$<NOT:$<CONFIG:ReleaseCoverage>>:${JOLT_PHYSICS_ROOT}/Jolt.h>")
 endif()
 
-# Set the JPH_DEBUG define for debug builds
-target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Debug>:JPH_DEBUG>")
+# Set the NDEBUG define for release builds
+target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:Release,Distribution,ReleaseASAN,ReleaseUBSAN,ReleaseTSAN,ReleaseCoverage>:NDEBUG>")
 
 # ASAN and TSAN should use the default allocators
 target_compile_definitions(Jolt PUBLIC "$<$<CONFIG:ReleaseASAN,ReleaseTSAN>:JPH_DISABLE_TEMP_ALLOCATOR;JPH_DISABLE_CUSTOM_ALLOCATOR>")
@@ -866,6 +880,10 @@ if (OBJECT_LAYER_BITS)
 	target_compile_definitions(Jolt PUBLIC JPH_OBJECT_LAYER_BITS=${OBJECT_LAYER_BITS})
 endif()
 
+if (USE_STD_VECTOR)
+	target_compile_definitions(Jolt PUBLIC JPH_USE_STD_VECTOR)
+endif()
+
 # Setting to periodically trace broadphase stats to help determine if the broadphase layer configuration is optimal
 if (TRACK_BROADPHASE_STATS)
 	target_compile_definitions(Jolt PUBLIC JPH_TRACK_BROADPHASE_STATS)
@@ -879,6 +897,13 @@ endif()
 # Setting to track simulation timings per body
 if (JPH_TRACK_SIMULATION_STATS)
 	target_compile_definitions(Jolt PUBLIC JPH_TRACK_SIMULATION_STATS)
+endif()
+
+# Compile against DirectX 11. Bytecode is provided by the application's ShaderLoader.
+if (JPH_USE_DX11)
+    include("${PHYSICS_REPO_ROOT}/Build/CompileShadersDX11.cmake")
+    target_compile_definitions(Jolt PUBLIC JPH_USE_DX11)
+    target_link_libraries(Jolt LINK_PUBLIC d3d11.lib d3dcompiler.lib)
 endif()
 
 # Compile against DirectX 12
@@ -986,8 +1011,8 @@ else()
 			target_compile_options(Jolt PUBLIC -msimd128 -msse4.2)
 		endif()
 		if (JPH_USE_WASM64)
-			target_compile_options(Jolt PUBLIC -m64)
-			target_link_options(Jolt PUBLIC -m64)
+			target_compile_options(Jolt PUBLIC -sMEMORY64)
+			target_link_options(Jolt PUBLIC -sMEMORY64)
 		endif()
 	elseif ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64" OR "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "AMD64" OR "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86" OR "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "i386")
 		# x86 and x86_64

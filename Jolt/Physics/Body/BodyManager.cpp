@@ -335,10 +335,6 @@ bool BodyManager::AddBodyWithCustomID(Body *ioBody, const BodyID &inBodyID)
 
 		// Update cached number of bodies
 		mNumBodies++;
-
-		// A custom ID establishes the current sequence number for this slot.
-		// Keep normal allocation from immediately reissuing the same ID after this body is destroyed.
-		mBodySequenceNumbers[idx] = inBodyID.GetSequenceNumber();
 	}
 
 	// Assign the ID
@@ -1029,7 +1025,7 @@ void BodyManager::Draw(const DrawSettings &inDrawSettings, const PhysicsSettings
 				Color sleep_color = Color(0, 255 - g, g);
 				inRenderer->DrawText3D(body->GetCenterOfMassPosition(), text, sleep_color, 0.2f);
 				for (int i = 0; i < 3; ++i)
-					inRenderer->DrawMarker(JPH_IF_DOUBLE_PRECISION(body->mMotionProperties->GetSleepTestOffset() +) body->mMotionProperties->mSleepTestSpheres[i].GetCenter(), sleep_color, body->mMotionProperties->mSleepTestSpheres[i].GetRadius());
+					inRenderer->DrawWireSphere(JPH_IF_DOUBLE_PRECISION(body->mMotionProperties->GetSleepTestOffset() +) body->mMotionProperties->mSleepTestSpheres[i].GetCenter(), body->mMotionProperties->mSleepTestSpheres[i].GetRadius(), sleep_color);
 			}
 
 			if (body->IsSoftBody())

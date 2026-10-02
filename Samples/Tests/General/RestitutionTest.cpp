@@ -9,7 +9,6 @@
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Layers.h>
-#include <Renderer/DebugRendererImp.h>
 
 JPH_IMPLEMENT_RTTI_VIRTUAL(RestitutionTest)
 {
@@ -42,11 +41,4 @@ void RestitutionTest::Initialize()
 		BodyID id = mBodyInterface->CreateAndAddBody(settings, EActivation::Activate);
 		SetBodyLabel(id, StringFormat("Restitution: %.1f", double(settings.mRestitution)));
 	}
-}
-
-void RestitutionTest::PrePhysicsUpdate(const PreUpdateParams &inParams)
-{
-	// Draw a line to show the initial height of the bodies
-	mDebugRenderer->DrawLine(RVec3(-55.0f, 20.0f, -20.0f), RVec3(55.0f, 20.0f, -20.0f), Color::sGreen);
-	mDebugRenderer->DrawLine(RVec3(-55.0f, 20.0f, 20.0f), RVec3(55.0f, 20.0f, 20.0f), Color::sGreen);
 }

@@ -250,20 +250,6 @@ TEST_SUITE("PhysicsTests")
 		b2 = bi.CreateBodyWithID(BodyID(0, 2), bc);
 		CHECK(b2 == nullptr);
 
-		// Destroy the first body
-		bi.DestroyBody(b1->GetID());
-
-		// Create a body with a custom ID and a high sequence number
-		b1 = bi.CreateBodyWithID(BodyID(0, 10), bc);
-		CHECK(b1->GetID() == BodyID(0, 10));
-
-		// Destroy it again
-		bi.DestroyBody(b1->GetID());
-
-		// Create another body in the normal way and check that we reuse the body index but that its sequence number got updated
-		b1 = bi.CreateBody(bc);
-		CHECK(b1->GetID() == BodyID(0, 11));
-
 		// Create body with different ID (leave 1 open slot)
 		b2 = bi.CreateBodyWithoutID(bc); // Using syntax that allows separation of allocation and assigning an ID
 		CHECK(b2 != nullptr);
@@ -1919,31 +1905,6 @@ TEST_SUITE("PhysicsTests")
 		CHECK_APPROX_EQUAL(body->GetAngularVelocity(), expected_angular_velocity);
 		CHECK(body->GetLinearVelocity() == Vec3::sZero());
 		CHECK(body->GetPosition() == initial_position);
-	}
-
-	TEST_CASE("TestAllowedDOFsVsSmallRotation")
-	{
-		PhysicsTestContext c;
-		Body &floor = c.CreateFloor();
-		floor.SetFriction(1.0f);
-
-		const float cPenetrationSlop = c.GetSystem()->GetPhysicsSettings().mPenetrationSlop;
-		const RVec3 cInitialPos(0, 0.5_r - cPenetrationSlop, 0);
-
-		// Introduce a slight rotation around the X axis (which has been frozen by EAllowedDOFs).
-		// This creates a very tiny (denormalized float) effective mass for the angular friction component.
-		// Inverting this effective mass will make it INF and cause a FP exception if not handled properly.
-		BodyCreationSettings bcs(new BoxShape(Vec3::sReplicate(0.5f)), cInitialPos, Quat(1.0e-20f, 0, 0, 1.0f), EMotionType::Dynamic, Layers::MOVING);
-		bcs.mAllowedDOFs = EAllowedDOFs::Plane2D;
-		bcs.mLinearVelocity = Vec3(0, -1, 0);
-		bcs.mFriction = 1.0f;
-		BodyID id = c.GetBodyInterface().CreateAndAddBody(bcs, EActivation::Activate);
-
-		c.SimulateSingleStep();
-
-		// Check not moved
-		CHECK_APPROX_EQUAL(c.GetBodyInterface().GetPosition(id), cInitialPos, 1.0e-5f);
-		CHECK_APPROX_EQUAL(c.GetBodyInterface().GetLinearVelocity(id), Vec3::sZero(), 1.0e-3f);
 	}
 
 	TEST_CASE("TestSelectiveStateSaveAndRestore")

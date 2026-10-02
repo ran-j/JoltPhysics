@@ -113,7 +113,7 @@ public:
 		}
 
 		// Calculate inverse effective mass: K = J M^-1 J^T
-		if (inv_effective_mass < FLT_MIN)
+		if (inv_effective_mass == 0.0f)
 			Deactivate();
 		else
 			mEffectiveMass = 1.0f / inv_effective_mass;

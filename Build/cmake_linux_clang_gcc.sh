@@ -5,7 +5,6 @@ COMPILER=""
 SHARED_LIB=false
 POSTFIX_DEBUG=false
 ENV_SCRIPT=""
-EXTRA_ARGS=""
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -19,14 +18,6 @@ while [ $# -gt 0 ]; do
       ;;
     --env-script=*)
       ENV_SCRIPT="${1#*=}"
-      shift
-      ;;
-    --deterministic)
-      EXTRA_ARGS="$EXTRA_ARGS -DCROSS_PLATFORM_DETERMINISTIC=ON"
-      shift
-      ;;
-    --double)
-      EXTRA_ARGS="$EXTRA_ARGS -DDOUBLE_PRECISION=ON"
       shift
       ;;
     *)
@@ -52,7 +43,7 @@ if [ -z "$COMPILER" ]; then
 fi
 
 echo ""
-echo "Usage: ./cmake_linux_clang_gcc.sh [BUILD_TYPE] [COMPILER] [--shared] [--deterministic] [--double] [--postfix-debug] [--env-script=...]"
+echo "Usage: ./cmake_linux_clang_gcc.sh [BUILD_TYPE] [COMPILER] [--shared] [--postfix-debug] [--env-script=...]"
 echo "Build type options: Debug, Release, Distribution, ReleaseUBSAN, ReleaseASAN, ReleaseTSAN, ReleaseCoverage"
 echo "Compiler options: clang++, clang++-XX, g++, g++-XX where XX is the version"
 echo ""
@@ -76,7 +67,7 @@ echo Generating Makefile for build type \"$BUILD_TYPE\" and compiler \"$COMPILER
 cmake -S . -B $BUILD_DIR -G "Unix Makefiles" \
   -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
   -DCMAKE_CXX_COMPILER=$COMPILER \
-  "$@" $POSTFIX_ARG $SHARED_ARG $EXTRA_ARGS
+  "$@" $POSTFIX_ARG $SHARED_ARG
 
   echo ""
   echo Compile by running:
